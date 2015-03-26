@@ -65,6 +65,7 @@ namespace Vocals {
 
         private void button1_Click(object sender, EventArgs e) {
             FormAction newActionForm = new FormAction();
+            newActionForm.Text = "New Action";
             newActionForm.ShowDialog();
 
             if (newActionForm.selectedType != "") {
@@ -106,6 +107,7 @@ namespace Vocals {
             Actions a = (Actions)listBox1.SelectedItem;
             if (a != null) {
                 FormAction formEditAction = new FormAction(a);
+                formEditAction.Text = "Edit Action";
                 formEditAction.ShowDialog();
 
                 a.keys = formEditAction.selectedKey;

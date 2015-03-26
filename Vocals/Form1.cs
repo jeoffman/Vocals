@@ -50,26 +50,29 @@ namespace Vocals {
         bool listening = false;
 
         string xmlProfilesFileName = "vocals_profiles.xml";
+        string version;
 
         public Form1() {
             InitializeComponent();
             initializeSpeechEngine();
 
             myWindows = new List<string>();
-            refreshProcessesList();
-
+            refreshProcessList();
 
             fetchProfiles();
-
-
 
             ghk = new GlobalHotkey(0x0004, Keys.None, this);
 
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             System.Reflection.AssemblyName assemblyName = assembly.GetName();
-            Version version = assemblyName.Version;
-            this.Text += " version : " + version.ToString();
+            this.version = assemblyName.Version.ToString();
+            //this.Text += " version : " + version;
 
+            if (comboBox_profiles.Items.Count > 0)
+            {
+                this.Text = "Vocals profile: " + comboBox_profiles.Items[0].ToString();
+            }
+            
             currentOptions = new Options();
             refreshSettings();
 
@@ -102,7 +105,7 @@ namespace Vocals {
             base.WndProc(ref m);
         }
 
-        public void refreshProcessesList() {
+        public void refreshProcessList() {
             EnumWindows(new EnumWindowsProc(EnumTheWindows), IntPtr.Zero);
             comboBox_processes.DataSource = null;
             comboBox_processes.DataSource = myWindows;
@@ -277,6 +280,9 @@ namespace Vocals {
 
             Profile p = (Profile)comboBox_profiles.SelectedItem;
             if (p != null) {
+
+                this.Text = "Vocals profile: " + p.name;
+
                 refreshProfile(p);
 
                 listBox1.DataSource = null;
@@ -293,12 +299,15 @@ namespace Vocals {
             if (p.commandList.Count != 0) {
                 Choices myWordChoices = new Choices();
 
-                foreach (Command c in p.commandList) {
+                foreach (Command c in p.commandList)
+                {
                     string[] commandList = c.commandString.Split(';');
-                    foreach (string s in commandList) {
+                    foreach (string s in commandList)
+                    {
                         string correctedWord;
                         correctedWord = s.Trim().ToLower();
-                        if (correctedWord != null && correctedWord != "") {
+                        if (correctedWord != null && correctedWord != "")
+                        {
                             myWordChoices.Add(correctedWord);
                         }
                     }
@@ -326,6 +335,7 @@ namespace Vocals {
                     listening = false;
 
                     FormCommand formCommand = new FormCommand();
+                    formCommand.Text = "New Command";
                     formCommand.ShowDialog();
 
                     Profile p = (Profile)comboBox_profiles.SelectedItem;
@@ -397,7 +407,7 @@ namespace Vocals {
             }
             else
             {
-                DialogResult res = MessageBox.Show("The file vocals_profiles_xml.vc is being used by another process. Exit without saving?", "Can't save profiles", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                DialogResult res = MessageBox.Show("The file " + xmlProfilesFileName + " is being used by another process.\n Exit without saving?", "Can't save profiles", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (res == DialogResult.No)
                 {
                     e.Cancel = true;
@@ -455,6 +465,7 @@ namespace Vocals {
                     Command c = (Command)listBox1.SelectedItem;
                     if (c != null) {
                         FormCommand formCommand = new FormCommand(c);
+                        formCommand.Text = "Edit Command";
                         formCommand.ShowDialog();
 
                         Profile p = (Profile)comboBox_profiles.SelectedItem;
@@ -504,7 +515,7 @@ namespace Vocals {
 
 
 
-        private void advancedSettingsToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e) {
             FormOptions formOptions = new FormOptions();
             formOptions.ShowDialog();
 
@@ -578,11 +589,24 @@ namespace Vocals {
 
         private void btn_refreshProcesses_Click(object sender, EventArgs e) {
             myWindows.Clear();
-            refreshProcessesList();
+            refreshProcessList();
         }
 
         private void progressBar1_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void saveProfilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (saveProfiles())
+            {
+                richTextBox1.AppendText("Saved profiles successfully to " + xmlProfilesFileName);
+            }
+            else
+            {
+                richTextBox1.AppendText("Error: Can't save profiles to " + xmlProfilesFileName);
+            }
 
         }
 

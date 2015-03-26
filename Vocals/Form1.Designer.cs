@@ -47,6 +47,7 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.advancedSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.saveProfilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -198,7 +199,7 @@
             this.groupBox3.Size = new System.Drawing.Size(572, 217);
             this.groupBox3.TabIndex = 16;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "logs";
+            this.groupBox3.Text = "Logs";
             this.groupBox3.Enter += new System.EventHandler(this.groupBox3_Enter);
             // 
             // progressBar1
@@ -222,14 +223,15 @@
             // advancedSettingsToolStripMenuItem
             // 
             this.advancedSettingsToolStripMenuItem.Name = "advancedSettingsToolStripMenuItem";
-            this.advancedSettingsToolStripMenuItem.Size = new System.Drawing.Size(117, 20);
-            this.advancedSettingsToolStripMenuItem.Text = "Advanced Settings";
-            this.advancedSettingsToolStripMenuItem.Click += new System.EventHandler(this.advancedSettingsToolStripMenuItem_Click);
+            this.advancedSettingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.advancedSettingsToolStripMenuItem.Text = "Options";
+            this.advancedSettingsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.advancedSettingsToolStripMenuItem,
+            this.saveProfilesToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -237,6 +239,13 @@
             this.menuStrip1.TabIndex = 17;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
+            // 
+            // saveProfilesToolStripMenuItem
+            // 
+            this.saveProfilesToolStripMenuItem.Name = "saveProfilesToolStripMenuItem";
+            this.saveProfilesToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
+            this.saveProfilesToolStripMenuItem.Text = "Save Profiles";
+            this.saveProfilesToolStripMenuItem.Click += new System.EventHandler(this.saveProfilesToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -254,7 +263,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Vocals";
@@ -292,6 +301,7 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btn_refreshProcesses;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveProfilesToolStripMenuItem;
     }
 }
 

@@ -27,7 +27,7 @@ namespace Vocals {
 
 
             if (waveInGetNumDevs() == 0) {
-                MessageBox.Show("Please plug a valid microphone before launching the application", "No microphone found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please plug in a microphone before launching the application", "No microphone found", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else {
                 Application.Run(new Form1());

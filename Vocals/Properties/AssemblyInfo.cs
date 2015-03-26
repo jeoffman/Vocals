@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Vocals")]
 [assembly: AssemblyDescription("Vocals : Voice recognition software to bind keys to your voice")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Al_th")]
+[assembly: AssemblyCompany("Al_th. Modified & extended by nstrom")]
 [assembly: AssemblyProduct("Vocals")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -237,6 +237,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FormCommand";
             this.Text = "New Command";
             this.Load += new System.EventHandler(this.FormPopup_Load);
