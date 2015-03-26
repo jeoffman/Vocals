@@ -51,7 +51,7 @@ namespace Vocals {
 
         public Form1() {
             InitializeComponent();
-            initialyzeSpeechEngine();
+            initializeSpeechEngine();
 
             myWindows = new List<string>();
             refreshProcessesList();
@@ -102,8 +102,8 @@ namespace Vocals {
 
         public void refreshProcessesList() {
             EnumWindows(new EnumWindowsProc(EnumTheWindows), IntPtr.Zero);
-            comboBox1.DataSource = null;
-            comboBox1.DataSource = myWindows;
+            comboBox_processes.DataSource = null;
+            comboBox_processes.DataSource = myWindows;
 
         }
 
@@ -130,7 +130,7 @@ namespace Vocals {
                     profileList = new List<Profile>();
                 }
             }
-            comboBox2.DataSource = profileList;
+            comboBox_profiles.DataSource = profileList;
         }
 
         private static void Get45or451FromRegistry() {
@@ -155,7 +155,7 @@ namespace Vocals {
 
         }
 
-        void initialyzeSpeechEngine() {
+        void initializeSpeechEngine() {
             richTextBox1.AppendText("Starting Speech Recognition Engine \n");
             RecognizerInfo info = null;
             foreach (RecognizerInfo ri in SpeechRecognitionEngine.InstalledRecognizers()) {
@@ -206,7 +206,7 @@ namespace Vocals {
 
             richTextBox1.AppendText("Commande reconnue \"" + e.Result.Text + "\" with confidence of : " + e.Result.Confidence + "\n");
 
-            Profile p = (Profile)comboBox2.SelectedItem;
+            Profile p = (Profile)comboBox_profiles.SelectedItem;
 
             if (p != null) {
                 foreach (Command c in p.commandList) {
@@ -247,23 +247,23 @@ namespace Vocals {
             if (profileName != "") {
                 Profile p = new Profile(profileName);
                 profileList.Add(p);
-                comboBox2.DataSource = null;
-                comboBox2.DataSource = profileList;
-                comboBox2.SelectedItem = p;
+                comboBox_profiles.DataSource = null;
+                comboBox_profiles.DataSource = profileList;
+                comboBox_profiles.SelectedItem = p;
             }
         }
 
-        private void button2_Click(object sender, EventArgs e) {
+        private void btn_add_profile_Click(object sender, EventArgs e) {
             createNewProfile();
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e) {
+        private void comboBox_profiles_SelectedIndexChanged(object sender, EventArgs e) {
             if (speechEngine != null) {
                 speechEngine.RecognizeAsyncCancel();
                 listening = false;
             }
 
-            Profile p = (Profile)comboBox2.SelectedItem;
+            Profile p = (Profile)comboBox_profiles.SelectedItem;
             if (p != null) {
                 refreshProfile(p);
 
@@ -307,7 +307,7 @@ namespace Vocals {
 
         }
 
-        private void button1_Click(object sender, EventArgs e) {
+        private void btn_add_cmd_Click(object sender, EventArgs e) {
             try {
                 if (speechEngine != null) {
                     speechEngine.RecognizeAsyncCancel();
@@ -316,7 +316,7 @@ namespace Vocals {
                     FormCommand formCommand = new FormCommand();
                     formCommand.ShowDialog();
 
-                    Profile p = (Profile)comboBox2.SelectedItem;
+                    Profile p = (Profile)comboBox_profiles.SelectedItem;
 
                     if (p != null) {
                         if (formCommand.commandString != null && formCommand.commandString != "" && formCommand.actionList.Count != 0) {
@@ -340,11 +340,11 @@ namespace Vocals {
             }
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+        private void comboBox_processes_SelectedIndexChanged(object sender, EventArgs e) {
             Process[] pTab = Process.GetProcesses();
             for (int i = 0; i < pTab.Length; i++) {
-                if (pTab[i] != null && comboBox1.SelectedItem != null) {
-                    if (pTab[i].MainWindowTitle.Equals(comboBox1.SelectedItem.ToString())) {
+                if (pTab[i] != null && comboBox_processes.SelectedItem != null) {
+                    if (pTab[i].MainWindowTitle.Equals(comboBox_processes.SelectedItem.ToString())) {
                         winPointer = pTab[i].MainWindowHandle;
                     }
                 }
@@ -359,18 +359,18 @@ namespace Vocals {
 
         }
 
-        private void button3_Click(object sender, EventArgs e) {
-            Profile p = (Profile)(comboBox2.SelectedItem);
+        private void btn_del_profile_Click(object sender, EventArgs e) {
+            Profile p = (Profile)(comboBox_profiles.SelectedItem);
             profileList.Remove(p);
-            comboBox2.DataSource = null;
-            comboBox2.DataSource = profileList;
+            comboBox_profiles.DataSource = null;
+            comboBox_profiles.DataSource = profileList;
 
             if (profileList.Count == 0) {
                 listBox1.DataSource = null;
             }
             else {
-                comboBox2.SelectedItem = profileList[0];
-                refreshProfile((Profile)comboBox2.SelectedItem);
+                comboBox_profiles.SelectedItem = profileList[0];
+                refreshProfile((Profile)comboBox_profiles.SelectedItem);
             }
         }
 
@@ -413,8 +413,8 @@ namespace Vocals {
 
         }
 
-        private void button4_Click(object sender, EventArgs e) {
-            Profile p = (Profile)(comboBox2.SelectedItem);
+        private void btn_del_cmd_Click(object sender, EventArgs e) {
+            Profile p = (Profile)(comboBox_profiles.SelectedItem);
             if (p != null) {
                 Command c = (Command)listBox1.SelectedItem;
                 if (c != null) {
@@ -449,7 +449,7 @@ namespace Vocals {
 
         }
 
-        private void button5_Click_1(object sender, EventArgs e) {
+        private void btn_edit_cmd_Click(object sender, EventArgs e) {
             try {
                 if (speechEngine != null) {
                     speechEngine.RecognizeAsyncCancel();
@@ -461,7 +461,7 @@ namespace Vocals {
                         FormCommand formCommand = new FormCommand(c);
                         formCommand.ShowDialog();
 
-                        Profile p = (Profile)comboBox2.SelectedItem;
+                        Profile p = (Profile)comboBox_profiles.SelectedItem;
 
 
                         if (p != null) {
@@ -580,10 +580,11 @@ namespace Vocals {
 
         }
 
-        private void button6_Click(object sender, EventArgs e) {
+        private void btn_refreshProcesses_Click(object sender, EventArgs e) {
             myWindows.Clear();
             refreshProcessesList();
         }
+
 
 
 
