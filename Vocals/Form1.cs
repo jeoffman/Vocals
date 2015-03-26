@@ -49,6 +49,8 @@ namespace Vocals {
 
         bool listening = false;
 
+        string xmlProfilesFileName = "vocals_profiles.xml";
+
         public Form1() {
             InitializeComponent();
             initializeSpeechEngine();
@@ -109,8 +111,7 @@ namespace Vocals {
 
         void fetchProfiles() {
             string dir = @"";
-            string serializationFile = Path.Combine(dir, "profiles.vd");
-            string xmlSerializationFile = Path.Combine(dir, "profiles_xml.vc");
+            string xmlSerializationFile = Path.Combine(dir, xmlProfilesFileName);
             try {
                 Stream xmlStream = File.Open(xmlSerializationFile, FileMode.Open);
                 XmlSerializer reader = new XmlSerializer(typeof(List<Profile>));
@@ -118,19 +119,30 @@ namespace Vocals {
                 xmlStream.Close();
             }
             catch {
-                try {
-                    Stream stream = File.Open(serializationFile, FileMode.Open);
-                    var bformatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    profileList = (List<Profile>)(bformatter.Deserialize(stream));
-                    stream.Close();
-
-
-                }
-                catch {
-                    profileList = new List<Profile>();
-                }
+                profileList = new List<Profile>();
+                //MessageBox.Show("Can't load profiles file: " + xmlProfilesFileName, "No profiles?");
             }
             comboBox_profiles.DataSource = profileList;
+        }
+
+        private bool saveProfiles()
+        {
+            string dir = @"";
+            string xmlSerializationFile = Path.Combine(dir, this.xmlProfilesFileName);
+
+            try
+            {
+                Stream xmlStream = File.Open(xmlSerializationFile, FileMode.Create);
+                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(List<Profile>));
+                writer.Serialize(xmlStream, profileList);
+                xmlStream.Close();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static void Get45or451FromRegistry() {
@@ -185,7 +197,7 @@ namespace Vocals {
                 speechEngine.SetInputToDefaultAudioDevice();
             }
             catch (InvalidOperationException ioe) {
-                richTextBox1.AppendText("No microphone were found\n");
+                richTextBox1.AppendText("No microphone found\n");
             }
 
             speechEngine.MaxAlternates = 3;
@@ -204,7 +216,7 @@ namespace Vocals {
 
         void sr_speechRecognized(object sender, SpeechRecognizedEventArgs e) {
 
-            richTextBox1.AppendText("Commande reconnue \"" + e.Result.Text + "\" with confidence of : " + e.Result.Confidence + "\n");
+            richTextBox1.AppendText("Command recognized \"" + e.Result.Text + "\" with confidence of : " + Math.Round(e.Result.Confidence, 2) + "\n");
 
             Profile p = (Profile)comboBox_profiles.SelectedItem;
 
@@ -377,41 +389,25 @@ namespace Vocals {
 
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
-            speechEngine.AudioLevelUpdated -= new EventHandler<AudioLevelUpdatedEventArgs>(sr_audioLevelUpdated);
-            speechEngine.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(sr_speechRecognized);
-
-            string dir = @"";
-            string serializationFile = Path.Combine(dir, "profiles.vd");
-            string xmlSerializationFile = Path.Combine(dir, "profiles_xml.vc");
-            try {
-                Stream stream = File.Open(serializationFile, FileMode.Create);
-                var bformatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                bformatter.Serialize(stream, profileList);
-                stream.Close();
-
-                try {
-                    Stream xmlStream = File.Open(xmlSerializationFile, FileMode.Create);
-                    System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(List<Profile>));
-                    writer.Serialize(xmlStream, profileList);
-                    xmlStream.Close();
-                }
-                catch (Exception ex) {
-                    DialogResult res =  MessageBox.Show("Le fichier profiles_xml.vc est en cours d'utilisation par un autre processus. Voulez vous quitter sans sauvegarder ?", "Impossible de sauvegarder", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                    if (res == DialogResult.No) {
-                        e.Cancel = true;
-                    }
-                }
-
+            
+            if (saveProfiles())
+            {
+                speechEngine.AudioLevelUpdated -= new EventHandler<AudioLevelUpdatedEventArgs>(sr_audioLevelUpdated);
+                speechEngine.SpeechRecognized -= new EventHandler<SpeechRecognizedEventArgs>(sr_speechRecognized);
             }
-            catch (Exception exception) {
-                DialogResult res = MessageBox.Show("Le fichier profiles.vd est en cours d'utilisation par un autre processus. Voulez vous quitter sans sauvegarder ?", "Impossible de sauvegarder", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (res == DialogResult.No) {
+            else
+            {
+                DialogResult res = MessageBox.Show("The file vocals_profiles_xml.vc is being used by another process. Exit without saving?", "Can't save profiles", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (res == DialogResult.No)
+                {
                     e.Cancel = true;
                 }
+                
             }
-
+            
 
         }
+
 
         private void btn_del_cmd_Click(object sender, EventArgs e) {
             Profile p = (Profile)(comboBox_profiles.SelectedItem);
@@ -583,6 +579,11 @@ namespace Vocals {
         private void btn_refreshProcesses_Click(object sender, EventArgs e) {
             myWindows.Clear();
             refreshProcessesList();
+        }
+
+        private void progressBar1_Click(object sender, EventArgs e)
+        {
+
         }
 
 

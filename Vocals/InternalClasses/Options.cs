@@ -37,7 +37,7 @@ namespace Vocals.InternalClasses {
 
         public void save() {
             string dir = @"";
-            string xmlSerializationFile = Path.Combine(dir, "options_xml.vc");
+            string xmlSerializationFile = Path.Combine(dir, "vocals_options.xml");
             try {
                 Stream xmlStream = File.Open(xmlSerializationFile, FileMode.Create);
                 XmlSerializer writer = new XmlSerializer(typeof(Options));
@@ -51,7 +51,7 @@ namespace Vocals.InternalClasses {
 
         public void load() {
             string dir = @"";
-            string xmlSerializationFile = Path.Combine(dir, "options_xml.vc");
+            string xmlSerializationFile = Path.Combine(dir, "vocals_options.xml");
             try {
                 Stream xmlStream = File.Open(xmlSerializationFile, FileMode.Open);
                 XmlSerializer reader = new XmlSerializer(typeof(Options));
