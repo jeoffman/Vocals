@@ -16,6 +16,7 @@ namespace Vocals.InternalClasses {
         public string answer;
         public int threshold;
 
+
         public Options() {
             try {
                 load();

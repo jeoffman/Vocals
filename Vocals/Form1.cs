@@ -313,13 +313,15 @@ namespace Vocals {
                     }
                 }
 
-                GrammarBuilder builder = new GrammarBuilder();
-                builder.Append(myWordChoices);
+                //if(myWordChoices.ToGrammarBuilder)
+                GrammarBuilder builder = myWordChoices.ToGrammarBuilder();
+                //builder.Append(myWordChoices);
                 Grammar mygram = new Grammar(builder);
 
 
                 speechEngine.UnloadAllGrammars();
-                speechEngine.LoadGrammar(mygram);
+                //speechEngine.LoadGrammar(mygram);
+                speechEngine.LoadGrammarAsync(mygram);
 
             }
             else {
